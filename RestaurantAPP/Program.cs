@@ -40,6 +40,36 @@ namespace RestaurantAPP
                 average /= restaurants.Count;
 
                 Console.WriteLine($"Average rating: {average:F2}");
+        //----------------------------------------------------------------//
+
+                Console.WriteLine("\n=== Add New Restaurant ===");
+
+                Console.Write("Enter restaurant name: ");
+                string name = Console.ReadLine();
+
+                Console.Write("Enter restaurant type: ");
+                string type = Console.ReadLine();
+
+                Console.Write("Enter restaurant rating: ");
+                double rating = double.Parse(Console.ReadLine());
+
+                int id = restaurants.Count + 1;
+
+                restaurants.Add(new Restaurant(id, name, type, rating));
+
+                Console.WriteLine("Restaurant added successfully!");
+
+                Console.WriteLine("-----------------------------");
+                Console.WriteLine($"Total: {restaurants.Count} restaurants");
+
+                foreach (Restaurant restaurant in restaurants)
+                {
+                    Console.WriteLine("-----------------------------");
+                    Console.WriteLine($"ID: {restaurant.Id}");
+                    Console.WriteLine($"Name: {restaurant.Name}");
+                    Console.WriteLine($"Type: {restaurant.Type}");
+                    Console.WriteLine($"Rating: {restaurant.Rating}");
+                }
             }
 
 
