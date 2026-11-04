@@ -27,7 +27,7 @@ namespace RestaurantAPP
                     );
                 }
 
-                Console.WriteLine("-----------------------------");
+                Console.WriteLine("=======================================================");
                 Console.WriteLine($"Total restaurants: {restaurants.Count}");
 
                 double average = 0;
@@ -40,9 +40,38 @@ namespace RestaurantAPP
                 average /= restaurants.Count;
 
                 Console.WriteLine($"Average rating: {average:F2}");
+                ShowGoodRating(restaurants);
+
             }
 
 
+
+            Console.WriteLine("=======================================================");
+        }
+
+        private static void ShowGoodRating(List<Restaurant> restaurants)
+        {
+            Console.WriteLine("=======================================================");
+            Console.WriteLine("=== Restaurants rated 4.5 and above ===");
+            int count = 0;
+
+            foreach (Restaurant restaurant in restaurants)
+            {
+                if (restaurant.Rating >= 4.5)
+                {
+                    Console.WriteLine($"{restaurant.Name} | {restaurant.Rating}");
+                    count++;
+                }
+            }
+
+            if (count == 0)
+            {
+                Console.WriteLine("No restaurant rated 4.5 or above.");
+            }
+            else
+            {
+                Console.WriteLine($"Total: {count} restaurants");
+            }
         }
     }
 }
