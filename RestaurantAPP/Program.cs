@@ -39,7 +39,12 @@ namespace RestaurantAPP
 
                 average /= restaurants.Count;
 
+                Restaurant max = Restaurant.GetMax(restaurants);
+                Restaurant min = Restaurant.GetMin(restaurants);
+
                 Console.WriteLine($"Average rating: {average:F2}");
+                Console.WriteLine($"Max Rating: {max.Rating} - {max.Name}");
+                Console.WriteLine($"Min Rating: {min.Rating} - {min.Name}");
         //----------------------------------------------------------------//
 
                 Console.WriteLine("\n=== Add New Restaurant ===");
@@ -89,6 +94,14 @@ public class Restaurant
         Name = name;
         Type = type;
         Rating = rating;
+    }
+    public static Restaurant GetMax(List<Restaurant> restaurants)
+    {
+        return restaurants.OrderByDescending(r => r.Rating).First();
+    }
+    public static Restaurant GetMin(List<Restaurant> restaurants)
+    {
+        return restaurants.OrderBy(r => r.Rating).First();
     }
 }
 
