@@ -17,91 +17,102 @@ namespace RestaurantAPP
                 new Restaurant(5, "Haidilao Hot Pot", "Hot Pot", 4.8)
             };
 
-            
-            foreach (Restaurant restaurant in restaurants)
-            {
-                Console.WriteLine($"{restaurant.Id} | {restaurant.Name} | {restaurant.Type} | {restaurant.Rating}");
-            }
+            // แสดงร้านอาหารทั้งหมด
+            ShowList(restaurants);
 
             Console.WriteLine("-----------------------------");
             Console.WriteLine($"Total restaurants: {restaurants.Count}");
 
+            // คำนวณคะแนนเฉลี่ย คำทำ นางสาว ปณิดา ลี่ไพฑูรย์
             double average = 0;
+
             foreach (Restaurant restaurant in restaurants)
             {
                 average += restaurant.Rating;
             }
+
             average /= restaurants.Count;
+
+            Restaurant max = Restaurant.GetMax(restaurants);
+            Restaurant min = Restaurant.GetMin(restaurants);
+
             Console.WriteLine($"Average rating: {average:F2}");
+            Console.WriteLine($"Max Rating: {max.Rating} - {max.Name}");
+            Console.WriteLine($"Min Rating: {min.Rating} - {min.Name}");
 
-            public static void SearchRestaurant(List<Restaurant> restaurants)
+            // ค้นหาร้านอาหาร
+            SearchRestaurant(restaurants);
+
+            // เพิ่มร้านอาหาร นายทศวรรต ธาราดล
+            Console.WriteLine("\n=== Add New Restaurant ===");
+
+            Console.Write("Enter restaurant name: ");
+            string name = Console.ReadLine();
+
+            Console.Write("Enter restaurant type: ");
+            string type = Console.ReadLine();
+
+            Console.Write("Enter restaurant rating: ");
+            double rating = double.Parse(Console.ReadLine());
+
+            int id = restaurants.Count + 1;
+
+            restaurants.Add(new Restaurant(id, name, type, rating));
+
+            Console.WriteLine("Restaurant added successfully!");
+
+            ShowList(restaurants);
+
+            Console.WriteLine($"Total: {restaurants.Count} restaurants");
+
+            Console.ReadKey();
+        }
+
+        // แสดงรายการร้านอาหาร นายนิติวัฒน์ ดวงมาลา
+        static void ShowList(List<Restaurant> restaurants)
+        {
+            foreach (Restaurant restaurant in restaurants)
             {
-                Console.Write("กรอกชื่อร้านที่ต้องการค้นหา: ");
-                string keyword = Console.ReadLine()?.Trim();
-
-                if (string.IsNullOrWhiteSpace(keyword))
-                {
-                    Console.WriteLine("\nไม่ได้กรอกคำค้นหา!");
-                    return;
-                }
-                Restaurant max = Restaurant.GetMax(restaurants);
-                Restaurant min = Restaurant.GetMin(restaurants);
-
-                Console.WriteLine($"Average rating: {average:F2}");
-                Console.WriteLine($"Max Rating: {max.Rating} - {max.Name}");
-                Console.WriteLine($"Min Rating: {min.Rating} - {min.Name}");
-        //----------------------------------------------------------------//
-
-                Console.WriteLine("\n=== Add New Restaurant ===");
-
-                Console.Write("Enter restaurant name: ");
-                string name = Console.ReadLine();
-
-                Console.Write("Enter restaurant type: ");
-                string type = Console.ReadLine();
-
-                Console.Write("Enter restaurant rating: ");
-                double rating = double.Parse(Console.ReadLine());
-
-                int id = restaurants.Count + 1;
-
-                restaurants.Add(new Restaurant(id, name, type, rating));
-
-                Console.WriteLine("Restaurant added successfully!");
-
-                Console.WriteLine("-----------------------------");
-                Console.WriteLine($"Total: {restaurants.Count} restaurants");
-
-                foreach (Restaurant restaurant in restaurants)
-                {
-                    Console.WriteLine("-----------------------------");
-                    Console.WriteLine($"ID: {restaurant.Id}");
-                    Console.WriteLine($"Name: {restaurant.Name}");
-                    Console.WriteLine($"Type: {restaurant.Type}");
-                    Console.WriteLine($"Rating: {restaurant.Rating}");
-                }
-            }
-
-                var results = restaurants
-                    .Where(r => r.Name.ToLower().Contains(keyword.ToLower()))
-                    .ToList();
-
-                if (results.Count > 0)
-                {
-                    Console.WriteLine($"\n--- ผลการค้นหาสำหรับ \"{keyword}\" ({results.Count} รายการ) ---");
-                    foreach (var restaurant in results)
-                    {
-                        Console.WriteLine($"[ID: {restaurant.Id}] {restaurant.Name} | ประเภท: {restaurant.Type} | คะแนน: {restaurant.Rating}");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"\nไม่พบร้านอาหารที่ชื่อตรงกับ \"{keyword}\"");
-                }
+                Console.WriteLine(
+                    $"{restaurant.Id} | {restaurant.Name} | {restaurant.Type} | {restaurant.Rating}");
             }
         }
 
-        public class Restaurant
+        // ค้นหาร้านอาหาร
+        public static void SearchRestaurant(List<Restaurant> restaurants)
+        {
+            Console.Write("\nกรอกชื่อร้านที่ต้องการค้นหา: ");
+            string keyword = Console.ReadLine()?.Trim();
+
+            if (string.IsNullOrWhiteSpace(keyword))
+            {
+                Console.WriteLine("ไม่ได้กรอกคำค้นหา!");
+                return;
+            }
+
+            var results = restaurants
+                .Where(r => r.Name.IndexOf(keyword,
+                    StringComparison.OrdinalIgnoreCase) >= 0)
+                .ToList();
+
+            if (results.Count > 0)
+            {
+                Console.WriteLine($"\n--- ผลการค้นหา ({results.Count} รายการ) ---");
+
+                foreach (var restaurant in results)
+                {
+                    Console.WriteLine(
+                        $"[ID: {restaurant.Id}] {restaurant.Name} | ประเภท: {restaurant.Type} | คะแนน: {restaurant.Rating}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("ไม่พบร้านอาหาร");
+            }
+        }
+    }
+
+    public class Restaurant
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -115,22 +126,15 @@ namespace RestaurantAPP
             Type = type;
             Rating = rating;
         }
-    }
-}
-    public Restaurant(int id, string name, string type, double rating)
-    {
-        Id = id;
-        Name = name;
-        Type = type;
-        Rating = rating;
-    }
-    public static Restaurant GetMax(List<Restaurant> restaurants)
-    {
-        return restaurants.OrderByDescending(r => r.Rating).First();
-    }
-    public static Restaurant GetMin(List<Restaurant> restaurants)
-    {
-        return restaurants.OrderBy(r => r.Rating).First();
-    }
-}
 
+        public static Restaurant GetMax(List<Restaurant> restaurants)
+        {
+            return restaurants.OrderByDescending(r => r.Rating).First();
+        }
+
+        public static Restaurant GetMin(List<Restaurant> restaurants)
+        {
+            return restaurants.OrderBy(r => r.Rating).First();
+        }
+    }
+}
