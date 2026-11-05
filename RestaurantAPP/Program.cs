@@ -34,13 +34,17 @@ namespace RestaurantAPP
             average /= restaurants.Count;
             Console.WriteLine($"Average rating: {average:F2}");
 
-           
-            Console.Write("\nกรอกชื่อร้านที่ต้องการค้นหา: ");
-            string keyword = Console.ReadLine()?.Trim();
-
-            if (!string.IsNullOrWhiteSpace(keyword))
+            public static void SearchRestaurant(List<Restaurant> restaurants)
             {
-                
+                Console.Write("กรอกชื่อร้านที่ต้องการค้นหา: ");
+                string keyword = Console.ReadLine()?.Trim();
+
+                if (string.IsNullOrWhiteSpace(keyword))
+                {
+                    Console.WriteLine("\nไม่ได้กรอกคำค้นหา!");
+                    return;
+                }
+
                 var results = restaurants
                     .Where(r => r.Name.ToLower().Contains(keyword.ToLower()))
                     .ToList();
@@ -58,14 +62,9 @@ namespace RestaurantAPP
                     Console.WriteLine($"\nไม่พบร้านอาหารที่ชื่อตรงกับ \"{keyword}\"");
                 }
             }
-            else
-            {
-                Console.WriteLine("\nไม่ได้กรอกคำค้นหา!");
-            }
         }
-    }
 
-    public class Restaurant
+        public class Restaurant
     {
         public int Id { get; set; }
         public string Name { get; set; }
