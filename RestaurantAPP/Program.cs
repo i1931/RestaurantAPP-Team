@@ -17,12 +17,21 @@ namespace RestaurantAPP
                 new Restaurant(5, "Haidilao Hot Pot", "Hot Pot", 4.8)
             };
 
+            foreach (Restaurant restaurant in restaurants)
+            {
+                Console.WriteLine(
+                    $"{restaurant.Id} | {restaurant.Name} | {restaurant.Type} | {restaurant.Rating}"
+                );
+            }
             // แสดงร้านอาหารทั้งหมด
             ShowList(restaurants);
 
+            Console.WriteLine("=======================================================");
+            Console.WriteLine($"Total restaurants: {restaurants.Count}");
             Console.WriteLine("-----------------------------");
             Console.WriteLine($"Total restaurants: {restaurants.Count}");
 
+            double average = 0;
             // คำนวณคะแนนเฉลี่ย คำทำ นางสาว ปณิดา ลี่ไพฑูรย์
             double average = 0;
 
@@ -33,6 +42,7 @@ namespace RestaurantAPP
 
             average /= restaurants.Count;
 
+            Console.WriteLine($"Average rating: {average:F2}");
             Restaurant max = Restaurant.GetMax(restaurants);
             Restaurant min = Restaurant.GetMin(restaurants);
 
@@ -78,12 +88,22 @@ namespace RestaurantAPP
             }
         }
 
+            Restaurant.ShowGoodRating(restaurants);
         // ค้นหาร้านอาหาร
         public static void SearchRestaurant(List<Restaurant> restaurants)
         {
             Console.Write("\nกรอกชื่อร้านที่ต้องการค้นหา: ");
             string keyword = Console.ReadLine()?.Trim();
 
+            Console.WriteLine("=======================================================");
+        }
+    }
+    public class Restaurant
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Type { get; set; }
+        public double Rating { get; set; }
             if (string.IsNullOrWhiteSpace(keyword))
             {
                 Console.WriteLine("ไม่ได้กรอกคำค้นหา!");
@@ -126,12 +146,45 @@ namespace RestaurantAPP
             Type = type;
             Rating = rating;
         }
+        public static void ShowGoodRating(List<Restaurant> restaurants)
+        {
+            Console.WriteLine("=======================================================");
+            Console.WriteLine("=== Restaurants rated 4.5 and above ===");
+
+            int count = 0;
+
+            foreach (Restaurant restaurant in restaurants)
+            {
+                if (restaurant.Rating >= 4.5)
+                {
+                    Console.WriteLine($"{restaurant.Name} | {restaurant.Rating}");
+                    count++;
+                }
+            }
+        public Restaurant(int id, string name, string type, double rating)
+        {
+            Id = id;
+            Name = name;
+            Type = type;
+            Rating = rating;
+        }
 
         public static Restaurant GetMax(List<Restaurant> restaurants)
         {
             return restaurants.OrderByDescending(r => r.Rating).First();
         }
 
+            if (count == 0)
+            {
+                Console.WriteLine("No restaurant rated 4.5 or above.");
+            }
+            else
+            {
+                Console.WriteLine($"Total: {count} restaurants");
+            }
+        }
+    }
+}
         public static Restaurant GetMin(List<Restaurant> restaurants)
         {
             return restaurants.OrderBy(r => r.Rating).First();
